@@ -72,6 +72,15 @@ jobs:
           cache: "yarn"
           cache-dependency-path: "app/client/yarn.lock"
 
+      - name: Install dependencies
+        if: steps.run_result.outputs.run_result != 'success'
+        run: yarn install --frozen-lockfile
+
+      # Run the Jest tests only if the workflow has been invoked in a PR and the previous re-run has failed
+      - name: Run the jest tests
+        if: steps.run_result.outputs.run_result != 'success'
+        run: REACT_APP_ENVIRONMENT=${{steps.vars.outputs.REACT_APP_ENVIRONMENT}} yarn run test:unit
+
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --token=${{ secrets.VERCEL_TOKEN }}
 
