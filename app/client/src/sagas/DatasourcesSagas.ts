@@ -1201,7 +1201,13 @@ function* fetchGsheetSpreadhsheets(
   }>,
 ) {
   try {
-    let googleSheetEditorConfig = yield select((state: AppState) =>
+    let googleSheetEditorConfig: {
+      children: [
+        {
+          initialValue: string;
+        },
+      ];
+    }[] = yield select((state: AppState) =>
       getEditorConfig(state, action.payload.pluginId),
     );
 
@@ -1221,7 +1227,7 @@ function* fetchGsheetSpreadhsheets(
       );
     }
 
-    const requestObject: Record<any, string> = {};
+    const requestObject: Record<string, string> = {};
 
     if (googleSheetEditorConfig && googleSheetEditorConfig[0]) {
       const configs = googleSheetEditorConfig[0]?.children;
@@ -1257,15 +1263,19 @@ function* fetchGsheetSpreadhsheets(
     if (isValidResponse) {
       yield put({
         type: ReduxActionTypes.FETCH_GSHEET_SPREADSHEETS_SUCCESS,
-        // @ts-expect-error: type mismatch for response
-        payload: response.data?.trigger,
+        payload: {
+          id: action.payload.datasourceId,
+          // @ts-expect-error: type mismatch for response
+          data: response.data?.trigger,
+        },
       });
     }
-  } catch (error) {
+  } catch (error: any) {
     yield put({
       type: ReduxActionTypes.FETCH_GSHEET_SPREADSHEETS_FAILURE,
       payload: {
-        error,
+        id: action.payload.datasourceId,
+        error: error.message,
       },
     });
   }
@@ -1299,15 +1309,19 @@ function* fetchGsheetSheets(
     if (isValidResponse) {
       yield put({
         type: ReduxActionTypes.FETCH_GSHEET_SHEETS_SUCCESS,
-        // @ts-expect-error: type mismatch for response
-        payload: response.data?.trigger,
+        payload: {
+          // @ts-expect-error: type mismatch for response
+          data: response.data?.trigger,
+          id: action.payload.sheetUrl,
+        },
       });
     }
-  } catch (error) {
+  } catch (error: any) {
     yield put({
       type: ReduxActionTypes.FETCH_GSHEET_SHEETS_FAILURE,
       payload: {
-        error,
+        id: action.payload.sheetUrl,
+        error: error.message,
       },
     });
   }
@@ -1345,15 +1359,19 @@ function* fetchGsheetColumns(
     if (isValidResponse) {
       yield put({
         type: ReduxActionTypes.FETCH_GSHEET_COLUMNS_SUCCESS,
-        // @ts-expect-error: type mismatch for response
-        payload: response.data?.trigger,
+        payload: {
+          // @ts-expect-error: type mismatch for response
+          data: response.data?.trigger,
+          id: action.payload.sheetName + "_" + action.payload.sheetUrl,
+        },
       });
     }
-  } catch (error) {
+  } catch (error: any) {
     yield put({
       type: ReduxActionTypes.FETCH_GSHEET_COLUMNS_FAILURE,
       payload: {
-        error,
+        id: action.payload.sheetName + "_" + action.payload.sheetUrl,
+        error: error.message,
       },
     });
   }
