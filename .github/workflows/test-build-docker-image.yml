@@ -89,7 +89,7 @@ jobs:
           rm -f ~/combined_failed_spec_ci
 
       # Download failed_spec_ci list for all CI container jobs
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         if: needs.ci-test.result != 'success'
         id: download_ci
         with:
@@ -172,19 +172,19 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download the react build artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: client-build
           path: app/client/build
 
       - name: Download the server build artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: server-build
           path: app/server/dist
 
       - name: Download the rts build artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: rts-dist
           path: app/rts/dist

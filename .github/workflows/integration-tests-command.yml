@@ -108,7 +108,7 @@ jobs:
           rm -f ~/combined_failed_spec_ci
 
       # Download failed_spec list for all jobs
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         if: needs.ci-test.result != 'success'
         id: download_ci
         with:
